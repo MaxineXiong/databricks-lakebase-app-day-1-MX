@@ -85,3 +85,11 @@ class MassiveClient:
         """
         data = self.get(f"/v2/aggs/ticker/{symbol}/prev")
         return data
+
+    def get_ticker_news(self, symbol: str, limit: int = 10) -> list[dict]:
+        """
+        Fetch recent news articles for a specific ticker symbol.
+        Returns a list of news items with title, description, published_utc, url, etc.
+        """
+        data = self.get(f"/v2/reference/news", params={"ticker": symbol, "limit": limit})
+        return data.get("results", [])

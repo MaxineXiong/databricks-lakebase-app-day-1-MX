@@ -4,74 +4,814 @@
   <meta charset="UTF-8">
   <title>Massive Stock Watchlist</title>
   <style>
-    body { font-family: -apple-system, Arial, sans-serif; max-width: 560px; margin: 60px auto; color: #222; }
-    h1 { font-size: 20px; }
-    label { display: block; margin-top: 16px; font-weight: 600; }
-    input[type="text"] { width: 100%; padding: 8px; margin-top: 6px; box-sizing: border-box; }
-    button { margin-top: 16px; padding: 8px 16px; cursor: pointer; }
-    #result { margin-top: 20px; white-space: pre-wrap; background: #f6f6f6; padding: 12px; border-radius: 6px; min-height: 20px; }
-    .hint { color: #777; font-size: 13px; margin-top: 4px; }
-    table { width: 100%; margin-top: 24px; border-collapse: collapse; }
-    th, td { text-align: left; padding: 8px; border-bottom: 1px solid #ddd; }
-    th { font-size: 13px; color: #555; text-transform: uppercase; }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 40px 20px;
+      color: #2d3748;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 40px;
+      color: white;
+    }
+
+    h1 {
+      font-size: 42px;
+      font-weight: 700;
+      margin-bottom: 12px;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .subtitle {
+      font-size: 18px;
+      opacity: 0.95;
+      font-weight: 400;
+    }
+
+    .card {
+      background: white;
+      border-radius: 16px;
+      padding: 32px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+      margin-bottom: 24px;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 25px 70px rgba(0,0,0,0.2);
+    }
+
+    .form-section {
+      margin-bottom: 32px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 600;
+      font-size: 14px;
+      color: #4a5568;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      padding: 14px 16px;
+      font-size: 16px;
+      border: 2px solid #e2e8f0;
+      border-radius: 10px;
+      transition: all 0.3s;
+      background: #f7fafc;
+    }
+
+    input[type="text"]:focus {
+      outline: none;
+      border-color: #667eea;
+      background: white;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    button {
+      width: 100%;
+      padding: 14px 24px;
+      margin-top: 16px;
+      font-size: 16px;
+      font-weight: 600;
+      color: white;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.3s;
+      box-shadow: 0 4px 14px rgba(102, 126, 234, 0.4);
+    }
+
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(102, 126, 234, 0.5);
+    }
+
+    button:active {
+      transform: translateY(0);
+    }
+
+    .hint {
+      color: #718096;
+      font-size: 14px;
+      margin-top: 8px;
+      line-height: 1.6;
+    }
+
+    #result {
+      margin-top: 16px;
+      padding: 16px;
+      background: #f0fdf4;
+      border-left: 4px solid #10b981;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      color: #065f46;
+      min-height: 20px;
+      display: none;
+    }
+
+    #result.show {
+      display: block;
+      animation: slideIn 0.3s ease;
+    }
+
+    #result.error {
+      background: #fef2f2;
+      border-left-color: #ef4444;
+      color: #991b1b;
+    }
+
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .table-container {
+      overflow-x: auto;
+      margin-top: 16px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+    }
+
+    thead {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+
+    th {
+      padding: 16px;
+      text-align: left;
+      font-size: 12px;
+      font-weight: 700;
+      color: white;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+    }
+
+    th:first-child {
+      border-radius: 10px 0 0 0;
+    }
+
+    th:last-child {
+      border-radius: 0 10px 0 0;
+    }
+
+    td {
+      padding: 16px;
+      border-bottom: 1px solid #e2e8f0;
+      font-size: 15px;
+      color: #2d3748;
+    }
+
+    tbody tr {
+      transition: background-color 0.2s;
+    }
+
+    tbody tr:hover {
+      background-color: #f7fafc;
+    }
+
+    tbody tr:last-child td:first-child {
+      border-radius: 0 0 0 10px;
+    }
+
+    tbody tr:last-child td:last-child {
+      border-radius: 0 0 10px 0;
+    }
+
+    .price {
+      font-weight: 600;
+      color: #10b981;
+      font-size: 16px;
+    }
+
+    .symbol {
+      font-weight: 700;
+      color: #667eea;
+    }
+
+    .delete-btn {
+      background: #ef4444;
+      color: white;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 600;
+      transition: all 0.2s;
+      box-shadow: 0 2px 4px rgba(239, 68, 68, 0.2);
+    }
+
+    .delete-btn:hover {
+      background: #dc2626;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 8px rgba(239, 68, 68, 0.3);
+    }
+
+    .delete-btn:active {
+      transform: translateY(0);
+    }
+
+    .delete-btn:disabled {
+      background: #d1d5db;
+      cursor: not-allowed;
+      box-shadow: none;
+    }
+
+    .news-btn {
+      background: #3b82f6;
+      color: white;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 600;
+      transition: all 0.2s;
+      box-shadow: 0 2px 4px rgba(59, 130, 246, 0.2);
+      margin-right: 8px;
+    }
+
+    .news-btn:hover {
+      background: #2563eb;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 8px rgba(59, 130, 246, 0.3);
+    }
+
+    .news-btn:active {
+      transform: translateY(0);
+    }
+
+    .news-btn:disabled {
+      background: #d1d5db;
+      cursor: not-allowed;
+      box-shadow: none;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 48px 20px;
+      color: #718096;
+    }
+
+    .empty-state-icon {
+      font-size: 48px;
+      margin-bottom: 16px;
+      opacity: 0.5;
+    }
+
+    .loading {
+      text-align: center;
+      padding: 20px;
+      color: #718096;
+    }
+
+    .spinner {
+      border: 3px solid #e2e8f0;
+      border-top: 3px solid #667eea;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      animation: spin 1s linear infinite;
+      margin: 0 auto;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    /* News Modal Styles */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgba(15, 23, 42, 0.75);
+      backdrop-filter: blur(4px);
+      animation: fadeIn 0.3s ease;
+    }
+
+    .modal.show {
+      display: block;
+    }
+
+    .modal-content {
+      background-color: white;
+      margin: 3% auto;
+      padding: 0;
+      border-radius: 20px;
+      width: 92%;
+      max-width: 900px;
+      max-height: 90vh;
+      box-shadow: 0 25px 80px rgba(0, 0, 0, 0.4);
+      animation: slideDown 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      display: flex;
+      flex-direction: column;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes slideDown {
+      from {
+        opacity: 0;
+        transform: translateY(-40px) scale(0.95);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    .modal-header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      padding: 28px 36px;
+      color: white;
+      border-radius: 20px 20px 0 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-shrink: 0;
+      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
+    }
+
+    .modal-header-content {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .modal-header-icon {
+      font-size: 28px;
+      line-height: 1;
+    }
+
+    .modal-header h2 {
+      margin: 0;
+      font-size: 26px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+    }
+
+    .modal-subtitle {
+      font-size: 14px;
+      opacity: 0.9;
+      margin-top: 4px;
+      font-weight: 400;
+    }
+
+    .close {
+      color: white;
+      font-size: 28px;
+      font-weight: 300;
+      cursor: pointer;
+      transition: all 0.2s;
+      line-height: 1;
+      padding: 8px;
+      background: rgba(255, 255, 255, 0.1);
+      border: none;
+      border-radius: 8px;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .close:hover {
+      background: rgba(255, 255, 255, 0.2);
+      transform: rotate(90deg);
+    }
+
+    .modal-body {
+      padding: 28px;
+      overflow-y: auto;
+      flex: 1;
+      min-height: 0;
+    }
+
+    .modal-body::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    .modal-body::-webkit-scrollbar-track {
+      background: #f1f5f9;
+      border-radius: 4px;
+    }
+
+    .modal-body::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 4px;
+    }
+
+    .modal-body::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
+
+    .news-item {
+      background: white;
+      padding: 24px;
+      margin-bottom: 20px;
+      border: 1px solid #e2e8f0;
+      border-radius: 16px;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .news-item::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 4px;
+      height: 100%;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .news-item:hover {
+      border-color: #cbd5e1;
+      box-shadow: 0 8px 24px rgba(102, 126, 234, 0.12);
+      transform: translateY(-2px);
+    }
+
+    .news-item:hover::before {
+      opacity: 1;
+    }
+
+    .news-item:last-child {
+      margin-bottom: 0;
+    }
+
+    .news-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+
+    .news-image {
+      width: 120px;
+      height: 80px;
+      border-radius: 10px;
+      object-fit: cover;
+      flex-shrink: 0;
+      background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+    }
+
+    .news-content {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .news-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: #1e293b;
+      margin-bottom: 10px;
+      line-height: 1.5;
+      letter-spacing: -0.3px;
+    }
+
+    .news-title a {
+      color: #1e293b;
+      text-decoration: none;
+      transition: color 0.2s;
+      display: inline;
+      background: linear-gradient(to right, #667eea, #764ba2);
+      background-size: 0 2px;
+      background-repeat: no-repeat;
+      background-position: left bottom;
+      transition: background-size 0.3s;
+    }
+
+    .news-title a:hover {
+      color: #667eea;
+      background-size: 100% 2px;
+    }
+
+    .news-meta {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 13px;
+      color: #64748b;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+    }
+
+    .news-meta-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .news-meta-icon {
+      font-size: 14px;
+      opacity: 0.7;
+    }
+
+    .news-publisher {
+      font-weight: 600;
+      color: #475569;
+    }
+
+    .news-divider {
+      color: #cbd5e1;
+    }
+
+    .news-description {
+      font-size: 15px;
+      color: #475569;
+      line-height: 1.7;
+      margin-bottom: 16px;
+    }
+
+    .news-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 12px;
+      border-top: 1px solid #f1f5f9;
+    }
+
+    .news-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: #667eea;
+      font-size: 14px;
+      font-weight: 600;
+      text-decoration: none;
+      padding: 8px 16px;
+      border-radius: 8px;
+      background: #f8f9ff;
+      transition: all 0.2s;
+    }
+
+    .news-link:hover {
+      background: #667eea;
+      color: white;
+      transform: translateX(2px);
+    }
+
+    .news-empty {
+      text-align: center;
+      padding: 60px 20px;
+      color: #94a3b8;
+    }
+
+    .news-empty-icon {
+      font-size: 64px;
+      margin-bottom: 20px;
+      opacity: 0.4;
+    }
+
+    .news-empty-title {
+      font-size: 20px;
+      font-weight: 600;
+      color: #475569;
+      margin-bottom: 8px;
+    }
+
+    .news-empty-text {
+      font-size: 15px;
+      color: #94a3b8;
+    }
+
+    @media (max-width: 768px) {
+      h1 {
+        font-size: 32px;
+      }
+
+      .card {
+        padding: 24px;
+      }
+
+      table {
+        font-size: 14px;
+      }
+
+      th, td {
+        padding: 12px 8px;
+      }
+
+      .modal-content {
+        width: 96%;
+        margin: 5% auto;
+      }
+
+      .modal-header {
+        padding: 20px 24px;
+      }
+
+      .modal-header h2 {
+        font-size: 22px;
+      }
+
+      .modal-body {
+        padding: 20px;
+      }
+
+      .news-item {
+        padding: 20px;
+      }
+
+      .news-header {
+        flex-direction: column;
+      }
+
+      .news-image {
+        width: 100%;
+        height: 160px;
+      }
+    }
   </style>
 </head>
 <body>
-  <h1>Stock Watchlist</h1>
-  <p class="hint">Enter a single ticker symbol. This sends exactly ONE call to the Massive API to fetch the latest price, then adds it to your watchlist.</p>
+  <div class="container">
+    <div class="header">
+      <h1>📈 Stock Watchlist</h1>
+      <p class="subtitle">Track your favorite stocks in real-time</p>
+    </div>
 
-  <form id="stock-form">
-    <label for="symbol">Ticker symbol</label>
-    <input type="text" id="symbol" name="symbol" placeholder="AAPL" required>
-    <button type="submit">Add to watchlist</button>
-  </form>
+    <div class="card">
+      <div class="form-section">
+        <form id="stock-form">
+          <label for="symbol">Add Stock Symbol</label>
+          <input type="text" id="symbol" name="symbol" placeholder="Enter ticker (e.g., AAPL, MSFT, GOOGL)" required>
+          <p class="hint">💡 This fetches the latest price with a single API call and adds it to your watchlist</p>
+          <button type="submit">➕ Add to Watchlist</button>
+        </form>
+        <div id="result"></div>
+      </div>
+    </div>
 
-  <div id="result"></div>
+    <div class="card">
+      <h2 style="margin-bottom: 20px; color: #2d3748; font-size: 24px; font-weight: 600;">Your Watchlist</h2>
+      <div class="table-container">
+        <table id="watchlist-table">
+          <thead>
+            <tr>
+              <th>Symbol</th>
+              <th>Email</th>
+              <th>Latest Price</th>
+              <th>Last Updated</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="watchlist-body">
+            <tr>
+              <td colspan="5">
+                <div class="loading">
+                  <div class="spinner"></div>
+                  <p style="margin-top: 12px;">Loading watchlist...</p>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
 
-  <table id="watchlist-table">
-    <thead>
-      <tr>
-        <th>Symbol</th>
-        <th>Email</th>
-        <th>Latest price</th>
-        <th>Updated</th>
-      </tr>
-    </thead>
-    <tbody id="watchlist-body"></tbody>
-  </table>
+  <!-- News Modal -->
+  <div id="news-modal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="modal-header-content">
+          <div class="modal-header-icon">📰</div>
+          <div>
+            <h2 id="modal-title">Stock News</h2>
+            <div class="modal-subtitle" id="modal-subtitle">Latest news articles</div>
+          </div>
+        </div>
+        <button class="close" id="close-modal">&times;</button>
+      </div>
+      <div class="modal-body" id="modal-body">
+        <!-- News content will be loaded here -->
+      </div>
+    </div>
+  </div>
 
   <script>
+    console.log('=== SCRIPT STARTING ===');
     const form = document.getElementById("stock-form");
     const resultEl = document.getElementById("result");
     const watchlistBody = document.getElementById("watchlist-body");
+    console.log('Form elements loaded:', {form, resultEl, watchlistBody});
 
     async function loadWatchlist() {
       try {
         const resp = await fetch("/watchlist");
         const data = await resp.json();
         if (!resp.ok) {
-          resultEl.textContent = "Error loading watchlist: " + (data.error || resp.statusText);
+          watchlistBody.innerHTML = `
+            <tr><td colspan="5">
+              <div class="empty-state">
+                <div class="empty-state-icon">⚠️</div>
+                <p>Error loading watchlist: ${data.error || resp.statusText}</p>
+              </div>
+            </td></tr>
+          `;
           return;
         }
+        
+        if (data.length === 0) {
+          watchlistBody.innerHTML = `
+            <tr><td colspan="5">
+              <div class="empty-state">
+                <div class="empty-state-icon">📉</div>
+                <p>Your watchlist is empty</p>
+                <p style="font-size: 14px; margin-top: 8px;">Add a stock symbol above to get started!</p>
+              </div>
+            </td></tr>
+          `;
+          return;
+        }
+        
         watchlistBody.innerHTML = "";
         data.forEach((row) => {
           const tr = document.createElement("tr");
           const price = row.latest_price !== null && row.latest_price !== undefined
-            ? Number(row.latest_price).toFixed(2)
+            ? "$" + Number(row.latest_price).toFixed(2)
             : "-";
           const updated = row.updated_at ? new Date(row.updated_at).toLocaleString() : "-";
-          tr.innerHTML = `<td>${row.symbol}</td><td>${row.email || "-"}</td><td>${price}</td><td>${updated}</td>`;
+          tr.innerHTML = `
+            <td><span class="symbol">${row.symbol}</span></td>
+            <td>${row.email || "-"}</td>
+            <td><span class="price">${price}</span></td>
+            <td>${updated}</td>
+            <td>
+              <button class="news-btn" data-symbol="${row.symbol}">📰 View News</button>
+              <button class="delete-btn" data-symbol="${row.symbol}">🗑️ Remove</button>
+            </td>
+          `;
           watchlistBody.appendChild(tr);
         });
       } catch (err) {
-        resultEl.textContent = "Failed to load watchlist: " + err;
+        watchlistBody.innerHTML = `
+          <tr><td colspan="5">
+            <div class="empty-state">
+              <div class="empty-state-icon">❌</div>
+              <p>Failed to load watchlist: ${err}</p>
+            </div>
+          </td></tr>
+        `;
       }
     }
 
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
       const symbol = document.getElementById("symbol").value;
-      resultEl.textContent = "Adding to watchlist...";
+      const submitBtn = form.querySelector('button[type="submit"]');
+      
+      // Show loading state
+      submitBtn.disabled = true;
+      submitBtn.textContent = "⏳ Adding...";
+      resultEl.className = "";
+      resultEl.classList.add("show");
+      resultEl.textContent = "⏳ Adding to watchlist...";
 
       try {
         const resp = await fetch("/watchlist", {
@@ -80,19 +820,174 @@
           body: JSON.stringify({ symbol }),
         });
         const data = await resp.json();
+        
         if (!resp.ok) {
-          resultEl.textContent = "Error: " + (data.error || resp.statusText);
+          resultEl.classList.add("error");
+          resultEl.textContent = "❌ " + (data.error || resp.statusText);
           return;
         }
-        resultEl.textContent = "Added " + data.symbol + " at price " + data.latest_price;
+        
+        resultEl.classList.remove("error");
+        resultEl.textContent = "✅ Successfully added " + data.symbol + " at $" + Number(data.latest_price).toFixed(2);
         document.getElementById("symbol").value = "";
         loadWatchlist();
+        
+        // Hide success message after 3 seconds
+        setTimeout(() => {
+          resultEl.classList.remove("show");
+        }, 3000);
       } catch (err) {
-        resultEl.textContent = "Request failed: " + err;
+        resultEl.classList.add("error");
+        resultEl.textContent = "❌ Request failed: " + err;
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = "➕ Add to Watchlist";
       }
     });
 
+    // Handle news and delete button clicks using event delegation
+    watchlistBody.addEventListener("click", async (e) => {
+      // Handle View News button
+      if (e.target.classList.contains("news-btn") || e.target.closest(".news-btn")) {
+        const btn = e.target.classList.contains("news-btn") ? e.target : e.target.closest(".news-btn");
+        const symbol = btn.dataset.symbol;
+        
+        if (!symbol) return;
+        
+        // Open modal and show loading state
+        const modal = document.getElementById("news-modal");
+        const modalTitle = document.getElementById("modal-title");
+        const modalSubtitle = document.getElementById("modal-subtitle");
+        const modalBody = document.getElementById("modal-body");
+        
+        modalTitle.textContent = `${symbol} News`;
+        modalSubtitle.textContent = `Latest news for ${symbol}`;
+        modalBody.innerHTML = '<p style="text-align: center; padding: 20px;">Loading news...</p>';
+        modal.classList.add("show");
+        
+        // Fetch news
+        try {
+          const resp = await fetch(`/news/${symbol}`);
+          const data = await resp.json();
+          
+          if (!resp.ok) {
+            modalBody.innerHTML = `<p style="text-align: center; padding: 20px; color: #e74c3c;">Error: ${data.error || resp.statusText}</p>`;
+            return;
+          }
+          
+          if (data.length === 0) {
+            modalBody.innerHTML = '<p style="text-align: center; padding: 20px;">No news available for this ticker.</p>';
+            return;
+          }
+          
+          // Display news items with simple styling
+          modalBody.innerHTML = data.map(item => `
+            <div style="border-bottom: 1px solid #eee; padding: 15px 0;">
+              <h4 style="margin: 0 0 8px 0;">
+                ${item.article_url ? `<a href="${item.article_url}" target="_blank" style="color: #2c3e50; text-decoration: none;">${item.title || "Untitled"}</a>` : (item.title || "Untitled")}
+              </h4>
+              ${item.description ? `<p style="color: #7f8c8d; font-size: 14px; margin: 8px 0;">${item.description}</p>` : ''}
+              <div style="font-size: 12px; color: #95a5a6; margin-top: 8px;">
+                ${item.publisher_name || 'Unknown source'} • ${item.published_utc ? new Date(item.published_utc).toLocaleDateString() : 'Unknown date'}
+              </div>
+            </div>
+          `).join("");
+        } catch (err) {
+          modalBody.innerHTML = `
+            <div class="news-empty">
+              <div class="news-empty-icon">❌</div>
+              <div class="news-empty-title">Failed to Load News</div>
+              <div class="news-empty-text">${err}</div>
+            </div>
+          `;
+        }
+        
+        return;
+      }
+      
+      // Handle Delete button
+if (e.target.classList.contains("delete-btn") || e.target.closest(".delete-btn")) {
+        const btn = e.target.classList.contains("delete-btn") ? e.target : e.target.closest(".delete-btn");
+        const symbol = btn.dataset.symbol;
+        
+        if (!symbol) return;
+        
+        // Confirm deletion
+        if (!confirm(`Are you sure you want to remove ${symbol} from your watchlist?`)) {
+          return;
+        }
+        
+        // Disable button and show loading state
+        btn.disabled = true;
+        btn.textContent = "⏳ Removing...";
+        
+        try {
+          const resp = await fetch("/watchlist", {
+            method: "DELETE",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ symbol }),
+          });
+          
+          const data = await resp.json();
+          
+          if (!resp.ok) {
+            resultEl.className = "";
+            resultEl.classList.add("show", "error");
+            resultEl.textContent = "❌ Failed to remove: " + (data.error || resp.statusText);
+            btn.disabled = false;
+            btn.textContent = "🗑️ Remove";
+            return;
+          }
+          
+          // Show success message
+          resultEl.className = "";
+          resultEl.classList.add("show");
+          resultEl.textContent = "✅ Successfully removed " + symbol;
+          
+          // Reload the watchlist
+          loadWatchlist();
+          
+          // Hide success message after 3 seconds
+          setTimeout(() => {
+            resultEl.classList.remove("show");
+          }, 3000);
+        } catch (err) {
+          resultEl.className = "";
+          resultEl.classList.add("show", "error");
+          resultEl.textContent = "❌ Request failed: " + err;
+          btn.disabled = false;
+          btn.textContent = "🗑️ Remove";
+        }
+      }
+    });
+
+    console.log('=== CALLING loadWatchlist ===');
     loadWatchlist();
+    console.log('=== SCRIPT CONTINUING ===');
+
+    // Handle modal close
+    const modal = document.getElementById("news-modal");
+    const closeBtn = document.getElementById("close-modal");
+
+    closeBtn.addEventListener("click", () => {
+      modal.classList.remove("show");
+    });
+
+    // Close modal when clicking outside
+    window.addEventListener("click", (e) => {
+      if (e.target === modal) {
+        modal.classList.remove("show");
+      }
+    });
+
+    // Close modal on Escape key
+    window.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && modal.classList.contains("show")) {
+        modal.classList.remove("show");
+      }
+    });
+    
+    console.log('=== ALL EVENT LISTENERS ATTACHED - SCRIPT COMPLETE ===');
   </script>
 </body>
 </html>
