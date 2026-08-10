@@ -89,7 +89,7 @@
                     {{ message.author }}
                     <span class="message-time">{{ message.created_at|australian_time }}</span>
                 </div>
-                <div class="message-content">{{ message.content }}</div>
+                <div class="message-content">{{ message.message_text }}</div>
             </div>
         {% endfor %}
     {% else %}
