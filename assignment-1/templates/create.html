@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block title %}Create New Ticket - Support Ticket Manager{% endblock %}
+
+{% block content %}
+<a href="{{ url_for('index') }}" class="btn btn-secondary" style="margin-bottom: 20px;">← Back to All Tickets</a>
+
+<div class="card">
+    <h2 style="margin-bottom: 20px; color: #2c3e50;">Create New Support Ticket</h2>
+    
+    <form method="POST" action="{{ url_for('create_ticket_route') }}">
+        <div class="form-group">
+            <label for="title">Ticket Title *</label>
+            <input type="text" id="title" name="title" required placeholder="Brief description of the issue">
+        </div>
+        
+        <div class="form-group">
+            <label for="status">Initial Status</label>
+            <select id="status" name="status">
+                <option value="open" selected>Open</option>
+                <option value="in_progress">In Progress</option>
+                <option value="resolved">Resolved</option>
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label for="created_by">Your Name/Email *</label>
+            <input type="text" id="created_by" name="created_by" required placeholder="john.doe@company.com">
+        </div>
+        
+        <div class="form-group">
+            <label for="initial_message">Initial Message (Optional)</label>
+            <textarea id="initial_message" name="initial_message" placeholder="Describe your issue in detail..."></textarea>
+        </div>
+        
+        <button type="submit" class="btn btn-success">Create Ticket</button>
+    </form>
+</div>
+{% endblock %}

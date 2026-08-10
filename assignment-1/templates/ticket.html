@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+
+{% block title %}Ticket #{{ ticket[0] }} - Support Ticket Manager{% endblock %}
+
+{% block content %}
+{% set ticket_id, title, status, created_by, created_at = ticket %}
+
+<a href="{{ url_for('index') }}" class="btn btn-secondary" style="margin-bottom: 20px;">← Back to All Tickets</a>
+
+<div class="card">
+    <h2 style="margin-bottom: 20px; color: #2c3e50;">Ticket #{{ ticket_id }} - {{ title }}</h2>
+    
+    <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 20px; margin-bottom: 20px;">
+        <div>
+            <p><strong>Created by:</strong> {{ created_by }}</p>
+            <p><strong>Created at:</strong> {{ created_at.strftime('%Y-%m-%d %H:%M:%S') if created_at else created_at }}</p>
+            <p>
+                <strong>Status:</strong>
+                <span style="padding: 4px 10px; border-radius: 15px; font-size: 13px; font-weight: 600;
+                    {% if status == 'open' %}
+                        background: #fee; color: #c33;
+                    {% elif status == 'in_progress' %}
+                        background: #ffe; color: #cc6600;
+                    {% elif status == 'resolved' %}
+                        background: #efe; color: #393;
+                    {% endif %}">
+                    {{ status.replace('_', ' ').title() }}
+                </span>
+            </p>
+        </div>
+        
+        <div>
+            <h3 style="margin-bottom: 10px;">Update Status</h3>
+            <form method="POST" action="{{ url_for('update_status_route', ticket_id=ticket_id) }}">
+                <div class="form-group" style="margin-bottom: 10px;">
+                    <select name="status" class="form-control">
+                        <option value="open" {% if status == 'open' %}selected{% endif %}>Open</option>
+                        <option value="in_progress" {% if status == 'in_progress' %}selected{% endif %}>In Progress</option>
+                        <option value="resolved" {% if status == 'resolved' %}selected{% endif %}>Resolved</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-success">Update Status</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <h3 style="margin-bottom: 20px;">💬 Messages</h3>
+    
+    {% if messages %}
+        {% for message in messages %}
+            {% set message_id, message_text, author, created_at = message %}
+            <div style="background: #f8f9fa; padding: 15px; margin-bottom: 15px; border-radius: 6px; border-left: 4px solid #3498db;">
+                <p style="margin-bottom: 5px;">
+                    <strong style="color: #2c3e50;">{{ author }}</strong>
+                    <span style="color: #7f8c8d; font-size: 13px; margin-left: 10px;">
+                        {{ created_at.strftime('%Y-%m-%d %H:%M:%S') if created_at else created_at }}
+                    </span>
+                </p>
+                <p style="margin-top: 10px; color: #333;">{{ message_text }}</p>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p style="color: #7f8c8d; text-align: center; padding: 20px;">No messages yet.</p>
+    {% endif %}
+</div>
+
+<div class="card">
+    <h3 style="margin-bottom: 15px;">Add a Message</h3>
+    <form method="POST" action="{{ url_for('add_message_route', ticket_id=ticket_id) }}">
+        <div class="form-group">
+            <label for="author">Your Name/Email</label>
+            <input type="text" id="author" name="author" required placeholder="john.doe@company.com">
+        </div>
+        <div class="form-group">
+            <label for="message_text">Message</label>
+            <textarea id="message_text" name="message_text" required placeholder="Type your message here..."></textarea>
+        </div>
+        <button type="submit" class="btn">Send Message</button>
+    </form>
+</div>
+{% endblock %}

@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block title %}All Tickets - Support Ticket Manager{% endblock %}
+
+{% block content %}
+<h2>All Support Tickets</h2>
+
+{% if tickets %}
+    <p style="margin-bottom: 20px; color: #7f8c8d;">Total Tickets: {{ tickets|length }}</p>
+    
+    {% for ticket in tickets %}
+        {% set ticket_id, title, status, created_by, created_at = ticket %}
+        <div class="card" style="display: flex; justify-content: space-between; align-items: center;">
+            <div style="flex: 1;">
+                <h3 style="margin-bottom: 10px; color: #2c3e50;">#{{ ticket_id }} - {{ title }}</h3>
+                <p style="color: #7f8c8d; font-size: 14px;">
+                    Created by: <strong>{{ created_by }}</strong> | 
+                    {{ created_at.strftime('%Y-%m-%d %H:%M') if created_at else created_at }}
+                </p>
+            </div>
+            <div style="display: flex; align-items: center; gap: 15px;">
+                <span style="padding: 6px 12px; border-radius: 20px; font-size: 13px; font-weight: 600;
+                    {% if status == 'open' %}
+                        background: #fee; color: #c33;
+                    {% elif status == 'in_progress' %}
+                        background: #ffe; color: #cc6600;
+                    {% elif status == 'resolved' %}
+                        background: #efe; color: #393;
+                    {% else %}
+                        background: #eee; color: #666;
+                    {% endif %}">
+                    {% if status == 'open' %}🔴
+                    {% elif status == 'in_progress' %}🟡
+                    {% elif status == 'resolved' %}🟢
+                    {% else %}⚪
+                    {% endif %}
+                    {{ status.replace('_', ' ').title() }}
+                </span>
+                <a href="{{ url_for('view_ticket', ticket_id=ticket_id) }}" class="btn">View Details</a>
+            </div>
+        </div>
+    {% endfor %}
+{% else %}
+    <div class="card" style="text-align: center; padding: 40px;">
+        <p style="color: #7f8c8d; font-size: 18px;">No tickets found.</p>
+        <p style="margin-top: 10px;">
+            <a href="{{ url_for('create_ticket_route') }}" class="btn btn-success">Create Your First Ticket</a>
+        </p>
+    </div>
+{% endif %}
+{% endblock %}
