@@ -6,22 +6,6 @@ A minimal Databricks App that:
 - Syncs Massive API data into Lakebase in batches
 - Exposes a small Flask API to trigger syncs and read synced records
 
-## 📚 About This Project
-
-**This application is my submission for "Day 1 Homework: Build a Lakebase-Powered Support Ticket App"** under the [DataExpert.io](https://www.dataexpert.io) program **"The Rise of the AI Data Engineer"**.
-
-The app has been extended beyond the boilerplate to include:
-- **Support Ticket Management System** with full CRUD operations
-- **Added Ticket priority** (Urgent, High, Medium, Low) with visual indicators and emoji badges
-- **Added a Filtering functionality by ticket status** (All, Open, In Progress, Resolved) with responsive filter buttons
-- **Added a delete functionality with a confirmation step** allowing for multiple selection and bulk delete operations
-- **Added a ticket statistics visual** showing real-time metrics by status and priority with percentage calculations
-- **Conversation/messaging** system for ticket collaboration with threaded discussions
-- **Australian timezone** formatting for timestamps (AEDT/AEST)
-- **Modern UI** with clean, professional design and responsive layout
-
-All data is stored in **Databricks Lakebase Postgres**, demonstrating real-world use of Databricks' managed Postgres offering for transactional workloads.
-
 ## Files
 
 - `app.py` - Flask app: `/healthz`, `/records` (GET), `/sync` (POST)
