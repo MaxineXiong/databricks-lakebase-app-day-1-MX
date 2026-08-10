@@ -140,58 +140,57 @@
     </div>
     
     {% for ticket in tickets %}
-        {% set ticket_id, title, status, priority, created_by, created_at = ticket %}
         <div class="card" style="display: flex; justify-content: space-between; align-items: center;">
             <div style="display: flex; align-items: center; gap: 15px; flex: 1;">
-                <input type="checkbox" class="ticket-checkbox" data-ticket-id="{{ ticket_id }}" 
+                <input type="checkbox" class="ticket-checkbox" data-ticket-id="{{ ticket.id }}" 
                        style="cursor: pointer; width: 20px; height: 20px; flex-shrink: 0;">
                 <div style="flex: 1;">
-                    <h3 style="margin-bottom: 10px; color: #2c3e50;">#{{ ticket_id }} - {{ title }}</h3>
+                    <h3 style="margin-bottom: 10px; color: #2c3e50;">#{{ ticket.id }} - {{ ticket.title }}</h3>
                     <p style="color: #7f8c8d; font-size: 14px;">
-                        Created by: <strong>{{ created_by }}</strong> | 
-                        {{ created_at|australian_time }}
+                        Created by: <strong>{{ ticket.created_by }}</strong> | 
+                        {{ ticket.created_at|australian_time }}
                     </p>
                 </div>
             </div>
             <div style="display: flex; align-items: center; gap: 15px;">
                 <span style="padding: 6px 12px; border-radius: 20px; font-size: 13px; font-weight: 600;
-                    {% if priority == 'urgent' %}
+                    {% if ticket.priority == 'urgent' %}
                         background: #dc3545; color: white;
-                    {% elif priority == 'high' %}
+                    {% elif ticket.priority == 'high' %}
                         background: #fd7e14; color: white;
-                    {% elif priority == 'medium' %}
+                    {% elif ticket.priority == 'medium' %}
                         background: #ffc107; color: #333;
-                    {% elif priority == 'low' %}
+                    {% elif ticket.priority == 'low' %}
                         background: #6c757d; color: white;
                     {% else %}
                         background: #eee; color: #666;
                     {% endif %}">
-                    {% if priority == 'urgent' %}🔥
-                    {% elif priority == 'high' %}⚠️
-                    {% elif priority == 'medium' %}📌
-                    {% elif priority == 'low' %}📋
+                    {% if ticket.priority == 'urgent' %}🔥
+                    {% elif ticket.priority == 'high' %}⚠️
+                    {% elif ticket.priority == 'medium' %}📌
+                    {% elif ticket.priority == 'low' %}📋
                     {% else %}⚪
                     {% endif %}
-                    {{ priority|capitalize }}
+                    {{ ticket.priority|capitalize }}
                 </span>
                 <span style="padding: 6px 12px; border-radius: 20px; font-size: 13px; font-weight: 600;
-                    {% if status == 'open' %}
+                    {% if ticket.status == 'open' %}
                         background: #fee; color: #c33;
-                    {% elif status == 'in_progress' %}
+                    {% elif ticket.status == 'in_progress' %}
                         background: #ffe; color: #cc6600;
-                    {% elif status == 'resolved' %}
+                    {% elif ticket.status == 'resolved' %}
                         background: #efe; color: #393;
                     {% else %}
                         background: #eee; color: #666;
                     {% endif %}">
-                    {% if status == 'open' %}🔴
-                    {% elif status == 'in_progress' %}🟡
-                    {% elif status == 'resolved' %}🟢
+                    {% if ticket.status == 'open' %}🔴
+                    {% elif ticket.status == 'in_progress' %}🟡
+                    {% elif ticket.status == 'resolved' %}🟢
                     {% else %}⚪
                     {% endif %}
-                    {{ status.replace('_', ' ').title() }}
+                    {{ ticket.status.replace('_', ' ').title() }}
                 </span>
-                <a href="{{ url_for('view_ticket', ticket_id=ticket_id) }}" class="btn">View Details</a>
+                <a href="{{ url_for('view_ticket', ticket_id=ticket.id) }}" class="btn">View Details</a>
             </div>
         </div>
     {% endfor %}

@@ -53,14 +53,9 @@
         </div>
     </div>
     
-    <div style="background: #f8f9fa; padding: 15px; border-radius: 5px; margin-bottom: 20px;">
-        <h3 style="margin-bottom: 10px; color: #2c3e50;">Description</h3>
-        <p style="color: #555; white-space: pre-wrap;">{{ ticket.description }}</p>
-    </div>
-    
     <div style="margin-bottom: 20px;">
         <h3 style="margin-bottom: 10px; color: #2c3e50;">Update Status</h3>
-        <form method="POST" action="{{ url_for('update_ticket_status_route', ticket_id=ticket.id) }}" style="display: flex; gap: 10px;">
+        <form method="POST" action="{{ url_for('update_status_route', ticket_id=ticket.id) }}" style="display: flex; gap: 10px;">
             <select name="status" style="width: auto; flex: 1; max-width: 300px;">
                 <option value="open" {% if ticket.status == 'open' %}selected{% endif %}>🔴 Open</option>
                 <option value="in_progress" {% if ticket.status == 'in_progress' %}selected{% endif %}>🟡 In Progress</option>
@@ -72,7 +67,7 @@
 
     <div style="margin-bottom: 20px;">
         <h3 style="margin-bottom: 10px; color: #2c3e50;">Update Priority</h3>
-        <form method="POST" action="{{ url_for('update_ticket_priority_route', ticket_id=ticket.id) }}" style="display: flex; gap: 10px;">
+        <form method="POST" action="{{ url_for('update_priority_route', ticket_id=ticket.id) }}" style="display: flex; gap: 10px;">
             <select name="priority" style="width: auto; flex: 1; max-width: 300px;">
                 <option value="low" {% if ticket.priority == 'low' %}selected{% endif %}>📋 Low</option>
                 <option value="medium" {% if ticket.priority == 'medium' %}selected{% endif %}>📌 Medium</option>
@@ -111,8 +106,8 @@
         </div>
         
         <div>
-            <label for="content">Message</label>
-            <textarea id="content" name="content" placeholder="Enter your message" required></textarea>
+            <label for="message_text">Message</label>
+            <textarea id="message_text" name="message_text" placeholder="Enter your message" required></textarea>
         </div>
         
         <button type="submit" class="btn btn-success">Add Message</button>

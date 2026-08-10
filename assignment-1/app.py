@@ -105,6 +105,9 @@ def get_all_tickets(status_filter=None):
     
     Args:
         status_filter: Optional status to filter by ('open', 'in_progress', 'resolved', or None for all)
+    
+    Returns:
+        List of ticket dictionaries
     """
     conn = get_connection()
     try:
@@ -133,12 +136,29 @@ def get_all_tickets(status_filter=None):
             """
             
             cursor.execute(query, params)
-            return cursor.fetchall()
+            rows = cursor.fetchall()
+            
+            # Convert tuples to dictionaries
+            tickets = []
+            for row in rows:
+                tickets.append({
+                    'id': row[0],
+                    'title': row[1],
+                    'status': row[2],
+                    'priority': row[3],
+                    'created_by': row[4],
+                    'created_at': row[5]
+                })
+            return tickets
     finally:
         conn.close()
 
 def get_ticket_by_id(ticket_id):
-    """Fetch a single ticket by ID."""
+    """Fetch a single ticket by ID.
+    
+    Returns:
+        Ticket dictionary or None if not found
+    """
     conn = get_connection()
     try:
         with conn.cursor() as cursor:
@@ -147,12 +167,27 @@ def get_ticket_by_id(ticket_id):
                 FROM {TICKETS_TABLE}
                 WHERE ticket_id = %s
             """, (ticket_id,))
-            return cursor.fetchone()
+            row = cursor.fetchone()
+            
+            if row:
+                return {
+                    'id': row[0],
+                    'title': row[1],
+                    'status': row[2],
+                    'priority': row[3],
+                    'created_by': row[4],
+                    'created_at': row[5]
+                }
+            return None
     finally:
         conn.close()
 
 def get_ticket_messages(ticket_id):
-    """Fetch all messages for a specific ticket."""
+    """Fetch all messages for a specific ticket.
+    
+    Returns:
+        List of message dictionaries
+    """
     conn = get_connection()
     try:
         with conn.cursor() as cursor:
@@ -162,7 +197,18 @@ def get_ticket_messages(ticket_id):
                 WHERE ticket_id = %s
                 ORDER BY created_at ASC
             """, (ticket_id,))
-            return cursor.fetchall()
+            rows = cursor.fetchall()
+            
+            # Convert tuples to dictionaries
+            messages = []
+            for row in rows:
+                messages.append({
+                    'id': row[0],
+                    'message_text': row[1],
+                    'author': row[2],
+                    'created_at': row[3]
+                })
+            return messages
     finally:
         conn.close()
 
