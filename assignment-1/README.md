@@ -1,4 +1,5 @@
-# Support Ticket Manager - Databricks App
+# Support Ticket Manager
+### A Databricks App Powered by Lakebase Postgres
 
 A web application for managing support tickets with full CRUD operations on Databricks Lakebase Postgres `tickets` and `ticket_messages` tables.
 
