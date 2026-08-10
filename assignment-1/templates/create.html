@@ -1,39 +1,52 @@
 {% extends "base.html" %}
 
-{% block title %}Create New Ticket - Support Ticket Manager{% endblock %}
+{% block title %}Create Ticket - Support Ticket Manager{% endblock %}
 
 {% block content %}
-<a href="{{ url_for('index') }}" class="btn btn-secondary" style="margin-bottom: 20px;">← Back to All Tickets</a>
-
 <div class="card">
-    <h2 style="margin-bottom: 20px; color: #2c3e50;">Create New Support Ticket</h2>
+    <h2 style="margin-bottom: 20px;">Create New Support Ticket</h2>
     
     <form method="POST" action="{{ url_for('create_ticket_route') }}">
-        <div class="form-group">
-            <label for="title">Ticket Title *</label>
-            <input type="text" id="title" name="title" required placeholder="Brief description of the issue">
+        <div>
+            <label for="title">Title</label>
+            <input type="text" id="title" name="title" placeholder="Brief description of your issue" required>
         </div>
         
-        <div class="form-group">
-            <label for="status">Initial Status</label>
-            <select id="status" name="status">
-                <option value="open" selected>Open</option>
-                <option value="in_progress">In Progress</option>
-                <option value="resolved">Resolved</option>
+        <div>
+            <label for="description">Description</label>
+            <textarea id="description" name="description" placeholder="Detailed description of your issue" required></textarea>
+        </div>
+        
+        <div>
+            <label for="priority">Priority</label>
+            <select id="priority" name="priority" required>
+                <option value="">-- Select Priority --</option>
+                <option value="low">📋 Low</option>
+                <option value="medium">📌 Medium</option>
+                <option value="high">⚠️ High</option>
+                <option value="urgent">🔥 Urgent</option>
             </select>
         </div>
         
-        <div class="form-group">
-            <label for="created_by">Your Name/Email *</label>
-            <input type="text" id="created_by" name="created_by" required placeholder="john.doe@company.com">
+        <div>
+            <label for="created_by">Your Name</label>
+            <input type="text" id="created_by" name="created_by" placeholder="Enter your name" required>
         </div>
         
-        <div class="form-group">
-            <label for="initial_message">Initial Message (Optional)</label>
-            <textarea id="initial_message" name="initial_message" placeholder="Describe your issue in detail..."></textarea>
+        <div style="display: flex; gap: 10px; margin-top: 10px;">
+            <button type="submit" class="btn btn-success">Create Ticket</button>
+            <a href="/" class="btn btn-secondary">Cancel</a>
         </div>
-        
-        <button type="submit" class="btn btn-success">Create Ticket</button>
     </form>
+</div>
+
+<div class="card" style="background: #e8f4f8; border-left: 4px solid #3498db;">
+    <h3 style="margin-bottom: 10px; color: #2c3e50;">💡 Tips</h3>
+    <ul style="margin-left: 20px; color: #555;">
+        <li>Provide a clear and specific title</li>
+        <li>Include as much detail as possible in the description</li>
+        <li>Select the appropriate priority level</li>
+        <li>You can add additional messages after creating the ticket</li>
+    </ul>
 </div>
 {% endblock %}

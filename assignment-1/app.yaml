@@ -1,4 +1,4 @@
-command:
+ in command:
   - "python"
   - "app.py"
 
