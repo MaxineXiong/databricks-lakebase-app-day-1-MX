@@ -4,9 +4,9 @@ A web application for managing support tickets with full CRUD operations on Data
 
 ## 📚 About This Project
 
-**This application is my submission for "Day 1 Homework: Build a Lakebase-Powered Support Ticket App"** under the [DataExpert.io](https://www.dataexpert.io) program **"The Rise of the AI Data Engineer"**.
+This application is my submission for **Day 1 Homework: Build a Lakebase-Powered Support Ticket App** under the [DataExpert.io](https://www.dataexpert.io) program [The Rise of the AI Data Engineer](https://learn.dataexpert.io/program/the-one-week-beginners-databricks-boot-camp-7129).
 
-All data is stored in **Databricks Lakebase Postgres**, demonstrating real-world use of Databricks' managed Postgres offering for transactional workloads.
+All data is stored in **Databricks Lakebase Postgres**, demonstrating real-world use of Databricks' managed Postgres offering for **OLTP** workloads.
 
 ## Tech Stack
 
