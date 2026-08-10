@@ -1,7 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, jsonify
 import psycopg2
 import os
-import base64
 from datetime import datetime
 import pytz
 from databricks.sdk import WorkspaceClient
@@ -22,9 +21,9 @@ _SCOPE = os.environ.get("LAKEBASE_SECRET_SCOPE", "support_ticket_app")
 _KEY = os.environ.get("LAKEBASE_SECRET_KEY", "lakebase-url")
 
 def _get_lakebase_url():
-    """Fetch and decode the Lakebase connection URL from the Databricks secret scope."""
+    """Fetch the Lakebase connection URL from the Databricks secret scope."""
     secret = _w.secrets.get_secret(scope=_SCOPE, key=_KEY)
-    return base64.b64decode(secret.value).decode("utf-8")
+    return secret.value
 
 def get_connection():
     """Create a connection to Lakebase Postgres database."""
