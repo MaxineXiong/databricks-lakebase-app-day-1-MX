@@ -9,6 +9,13 @@ This application is my submission for **Day 1 Homework: Build a Lakebase-Powered
 
 All data is stored in **Databricks Lakebase Postgres**, demonstrating real-world use of Databricks' managed Postgres offering for **OLTP** workloads.
 
+## 📸 Screenshots
+
+### Application Dashboard
+![Support Ticket Manager UI](./assets/app-UI.png)
+
+*The main dashboard displays ticket statistics, status filters, and the complete ticket list with priority badges and status indicators.*
+
 ## Tech Stack
 
 - **Flask** - Web application framework and REST API
