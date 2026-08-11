@@ -203,3 +203,11 @@ created_at TIMESTAMP
 **Authentication errors**: Double-check your Lakebase URL in the secrets. Re-run `setup_secrets.py` if needed.
 
 **Secret scope errors**: Ensure you have permissions to create secret scopes in your workspace
+
+## 💭 Project Reflection
+
+- **Biggest Challenge**: Coordinating multiple interactive features (priority levels, status filtering, bulk delete, and real-time statistics) while maintaining a clean, responsive UI that preserved all functionality across different views.
+
+- **Lakebase vs Analytics Tables**: Lakebase Postgres is fundamentally designed for transactional workloads (OLTP) with ACID guarantees and foreign key constraints—perfect for operational applications requiring real-time updates and relational integrity—whereas traditional analytics tables like Delta Lake are optimized for read-heavy analytical workloads (OLAP) but lack the concurrent write support and transactional guarantees needed for operational apps.
+
+- **Future Enhancement**: The next feature would be ticket assignment with user authentication, allowing support agents to claim tickets with role-based access control, along with email notifications for status changes to improve real-time collaboration and accountability.
